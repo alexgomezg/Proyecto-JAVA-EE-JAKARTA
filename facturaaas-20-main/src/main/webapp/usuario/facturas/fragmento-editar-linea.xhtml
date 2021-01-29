@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition>
+
+        <h:form id="formularioEditarLinea" >
+            <b:modal id="modalEditarLinea" class="modal-editar-linea-class" title="Crear/Editar Linea de factura">
+                <b:container fluid="true">
+                    <b:panel title="Crear/Editar Linea Factura"
+                             rendered="#{not empty lineaFacturaController.lineaActual}"
+                             collapsible="false">
+                        <b:panelGrid columns="2" col-spans="4,8">
+                            <h:outputLabel value="Concepto" for="concepto/"/>
+                            <b:inputText id="concepto" value="#{lineaFacturaController.lineaActual.concepto}" required="true" requiredMessage="Debe indicarse el concepto"/>
+                            
+                            <h:outputLabel value="Cantidad" for="cantidad/"/>
+                            <b:inputText type="number" id="cantidad" value="#{lineaFacturaController.lineaActual.cantidad}" required="true" requiredMessage="Debe indicarse la cantidad"/>
+                            
+                            <h:outputLabel value="Precio por unidad" for="precioUnitario/"/>
+                            <b:inputText type="number" id="precioUnitario" value="#{lineaFacturaController.lineaActual.precioUnitario}" required="true" requiredMessage="Debe indicarse el precio unitario">
+                                <f:facet name="append">
+                                    <h:outputText value="€" />
+                                </f:facet>
+                            </b:inputText>
+                            
+                            <h:outputLabel value="Porcentaje de descuento" for="porcentajeDescuento/"/>
+                            <b:inputText type="number" id="porcentajeDescuento" value="#{lineaFacturaController.lineaActual.porcentajeDescuento}" required="true" requiredMessage="Debe indicarse el porcentaje de descuento">
+                                <f:facet name="append">
+                                    <h:outputText value="%" />
+                                </f:facet>
+                            </b:inputText>
+                            
+                            <h:outputLabel value="Tipo de IVA" for="tipoIva"/>
+                            <b:selectOneMenu value="#{lineaFacturaController.lineaActual.tipoIVA}" required="false" converter="omnifaces.SelectItemsConverter">
+                                <f:selectItems value="#{lineaFacturaController.cargarTiposIVA()}" var="t" itemValue="#{t}" itemLabel="#{t.nombre}"/>
+                            </b:selectOneMenu>
+                            
+                            <b:commandButton value="Guardar" 
+                                         ajax="true" process="@form" update=":listaLineas:tablaListadoLineas" 
+                                         actionListener="#{lineaFacturaController.doNuevaLinea()}"  
+                                         oncomplete="$('.modal-editar-linea-class').modal('hide')"/>
+
+                            <b:commandButton value="Cancelar" immediate="true"
+                                             ajax="true" process="@form" update=":listaLineas:tablaListadoLineas" 
+                                             actionListener="#{lineaFacturaController.doCancelarEditada()}" 
+                                             oncomplete="$('.modal-editar-linea-class').modal('hide')" />
+                        
+                            
+                        </b:panelGrid>
+                    </b:panel>
+                </b:container>
+            </b:modal>
+        </h:form>
+
+    </ui:composition>
+</html>
